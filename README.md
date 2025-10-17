@@ -34,7 +34,7 @@ Polars is quickly gaining popularity because of its nice syntax and speed.
 1. Fork the repository from the Cambridge-FDS workspace:
    https://github.com/cambridge-FDS/pandas_to_polars_cookbook
 2. Divide the chapters among team members, ensuring each person is responsible for at least one
-   chapter of the cookbook.
+   chapter of the cookbook  (i.e. if you are four group members, you should do at least four chapters).
 3. Rewrite each Pandas implementation using Polars. Note that sometimes this might not be directly
    possible. Particularly plotting is harder with a Polars data frame at the moment.
 4. Create a separate Pull Request (PR) for each change implemented.
