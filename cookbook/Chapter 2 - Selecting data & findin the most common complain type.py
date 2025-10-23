@@ -15,12 +15,23 @@ complaints.head()
 # you cannot exactly do the same in Polars but you can read about some other solutions here:
 # see a discussion about dtype argument here: https://github.com/pola-rs/polars/issues/8230
 
+# Polars version
+# Polars handles mixed types better by default, but we can be explicit
+pl_complaints = pl.read_csv(
+    "../data/311-service-requests.csv",
+    infer_schema_length=10000  # Check more rows to infer schema correctly
+)
+pl_complaints.head()
+
 # %%
 # Selecting columns:
 complaints["Complaint Type"]
 
 # %%
 # TODO: rewrite the above using the polars library
+
+# Polars version:
+pl_complaints["Complaint Type"]
 
 # %%
 # Get the first 5 rows of a dataframe
@@ -29,13 +40,17 @@ complaints[:5]
 # %%
 # TODO: rewrite the above using the polars library
 
+# Polars version
+pl_complaints.head(5)
+
 # %%
 # Combine these to get the first 5 rows of a column:
 complaints["Complaint Type"][:5]
 
 # %%
 # TODO: rewrite the above using the polars library
-
+# Polars version
+pl_complaints["Complaint Type"].head(5)
 
 # %%
 # Selecting multiple columns
@@ -43,6 +58,8 @@ complaints[["Complaint Type", "Borough"]]
 
 # %%
 # TODO: rewrite the above using the polars library
+# Polars version
+pl_complaints.select(["Complaint Type", "Borough"])
 
 # %%
 # What's the most common complaint type?
@@ -51,6 +68,15 @@ complaint_counts[:10]
 
 # %%
 # TODO: rewrite the above using the polars library
+
+# Polars version
+pl_complaint_counts = (
+    pl_complaints
+    .group_by("Complaint Type")
+    .agg(pl.count().alias("count"))
+    .sort("count", descending=True)
+)
+pl_complaint_counts.head(10)
 
 # %%
 # Plot the top 10 most common complaints
@@ -64,3 +90,13 @@ plt.show()
 
 # %%
 # TODO: please do the same with Polars
+
+# Polars version using seaborn
+import seaborn as sns
+top_10_df = pl_complaint_counts.head(10).to_pandas()
+plt.figure(figsize=(12, 6))
+sns.barplot(data=top_10_df, x="Complaint Type", y="count")
+plt.title("Top 10 Complaint Types")
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
